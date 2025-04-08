@@ -1,3 +1,4 @@
+require('./error-handler');
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -8,9 +9,23 @@ app.get('/', (req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-// Start the bot in the background
-require('./index.js');
+// Try to start the bot, but don't let it crash the server
+try {
+  // Import the bot code
+  require('./index.js');
+} catch (error) {
+  console.error('Error starting bot:', error);
+}
+
+// Handle graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down gracefully');
+  server.close(() => {
+    console.log('HTTP server closed');
+    process.exit(0);
+  });
+});

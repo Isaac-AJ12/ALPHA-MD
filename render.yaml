@@ -11,4 +11,6 @@ services:
         value: production
       - key: PORT
         value: 3000
+      - key: SKIP_WA_CONNECTION
+        value: "true"
     autoDeploy: true
