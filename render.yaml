@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: alpha-md
+    env: node
+    build:
+      dockerfile: Dockerfile
+    start: npm run keith
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+    autoDeploy: true
