@@ -2,10 +2,9 @@ services:
   - type: web
     name: alpha-md
     env: node
-    build:
-      dockerfile: Dockerfile
-    start: npm run keith
-    healthCheckPath: /
+    buildCommand: npm install --legacy-peer-deps
+    startCommand: npm run keith
+    healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
@@ -14,3 +13,4 @@ services:
       - key: SKIP_WA_CONNECTION
         value: "true"
     autoDeploy: true
+    plan: free
