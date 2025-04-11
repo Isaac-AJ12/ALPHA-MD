@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "s": "node index.js", 
     "keith": "node server.js || (echo 'Server restarting due to error' && node server.js)",
-    "c": "tsc"
+    "c": "tsc",
+    "cleanup": "node cleanup-sessions.js"
   },
   "keywords": [
     "bot",

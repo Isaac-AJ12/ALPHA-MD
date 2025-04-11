@@ -23,14 +23,14 @@ const server = app.listen(PORT, () => {
 // Function to start the bot
 const startBot = async () => {
   try {
+    // Run cleanup before starting
+    cleanupSessions();
+    
     // Check if we should skip WhatsApp connection during deployment
     if (process.env.SKIP_WA_CONNECTION === 'true' && process.env.NODE_ENV === 'production') {
       console.log('Skipping WhatsApp connection during deployment as configured');
       return;
     }
-    
-    // Clean up session files before starting
-    cleanupSessions();
     
     // Clear require cache for index.js to ensure fresh start
     delete require.cache[require.resolve('./index.js')];
@@ -38,6 +38,11 @@ const startBot = async () => {
     // Import the bot code
     await require('./index.js');
     console.log('Bot started successfully');
+    
+    // Run cleanup again after bot is started (to catch any new sessions)
+    setTimeout(() => {
+      cleanupSessions();
+    }, 30000); // Wait 30 seconds after bot starts
   } catch (error) {
     console.error('Error starting bot:', error);
     throw error; // Rethrow to allow reconnect logic to handle it

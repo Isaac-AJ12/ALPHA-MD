@@ -9,17 +9,23 @@ RUN apt-get update && \
   npm i pm2 -g && \
   rm -rf /var/lib/apt/lists/*
   
-RUN  git clone https://github.com/Keithkeizzah/KEITH-MD  /root/Alpha_BOt
+RUN git clone https://github.com/Keithkeizzah/KEITH-MD /root/Alpha_BOt
 WORKDIR /root/Alpha_Bot/
 
-RUN find . -name "*.json" -path "*/sessions/*" -delete || true
-
 COPY package.json .
+COPY cleanup-sessions.js .
+COPY .env .
+
+RUN node cleanup-sessions.js
+
 RUN npm install pm2 -g
 RUN npm install --legacy-peer-deps
 
 COPY . .
 
+RUN node cleanup-sessions.js
+
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+# Use a startup script that runs cleanup before starting the server
+CMD ["node", "-e", "require('./cleanup-sessions').cleanupSessions(); require('./server')"]
