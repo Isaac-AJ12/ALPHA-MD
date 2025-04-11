@@ -12,7 +12,7 @@ RUN apt-get update && \
 RUN  git clone https://github.com/Keithkeizzah/KEITH-MD  /root/Alpha_BOt
 WORKDIR /root/Alpha_Bot/
 
-
+RUN find . -name "*.json" -path "*/sessions/*" -delete || true
 
 COPY package.json .
 RUN npm install pm2 -g
