@@ -11,14 +11,14 @@ RUN apt-get update && \
   
 RUN git clone https://github.com/Keithkeizzah/KEITH-MD /root/Alpha_BOt
 WORKDIR /root/Alpha_Bot/
-
+RUN npm install dotenv fs path
 COPY package.json .
 COPY cleanup-sessions.js .
 
 RUN node cleanup-sessions.js
 
 RUN npm install pm2 -g
-RUN npm install --legacy-peer-deps dotenv fs path
+RUN npm install --legacy-peer-deps 
 
 COPY . .
 
