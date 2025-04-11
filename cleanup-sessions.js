@@ -19,7 +19,7 @@ function cleanupSessions() {
     const files = fs.readdirSync(authDir);
     
     // Get owner number from environment variable
-    const ownerNumber = process.env.NUMBERO_ONWER || '';
+    const ownerNumber = process.env.NUMERO_OWNER || '';
     
     // Look for specific session files matching the pattern session-{env.NUMBERO_ONWER}.*.json
     const conflictFiles = files.filter(file => 
