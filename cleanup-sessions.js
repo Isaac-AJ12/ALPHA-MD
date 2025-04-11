@@ -1,33 +1,37 @@
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config();
 
 // Function to clean up session files that might be causing conflicts
 function cleanupSessions() {
-  const sessionsDir = path.join(__dirname, 'sessions');
+  const authDir = path.join(__dirname, 'auth');
   
-  // Check if the sessions directory exists
-  if (!fs.existsSync(sessionsDir)) {
-    console.log('No sessions directory found. Skipping cleanup.');
+  // Check if the auth directory exists
+  if (!fs.existsSync(authDir)) {
+    console.log('No auth directory found. Skipping cleanup.');
     return;
   }
   
   console.log('Cleaning up session files...');
   
   try {
-    // Read all files in the sessions directory
-    const files = fs.readdirSync(sessionsDir);
+    // Read all files in the auth directory
+    const files = fs.readdirSync(authDir);
     
-    // Look for specific session files that might be causing conflicts
+    // Get owner number from environment variable
+    const ownerNumber = process.env.NUMBERO_ONWER || '';
+    
+    // Look for specific session files matching the pattern session-{env.NUMBERO_ONWER}.*.json
     const conflictFiles = files.filter(file => 
       file.endsWith('.json') && 
-      (file.includes('session') || file.includes('creds'))
+      file.startsWith(`session-${ownerNumber}`)
     );
     
     if (conflictFiles.length > 0) {
       console.log(`Found ${conflictFiles.length} potential conflict files.`);
       
       // Backup the files before deleting
-      const backupDir = path.join(__dirname, 'sessions-backup');
+      const backupDir = path.join(__dirname, 'auth-backup');
       if (!fs.existsSync(backupDir)) {
         fs.mkdirSync(backupDir);
       }
@@ -39,7 +43,7 @@ function cleanupSessions() {
       
       // Backup and delete conflict files
       conflictFiles.forEach(file => {
-        const filePath = path.join(sessionsDir, file);
+        const filePath = path.join(authDir, file);
         const backupPath = path.join(timestampedBackupDir, file);
         
         // Copy file to backup
