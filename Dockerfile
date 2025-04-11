@@ -14,7 +14,6 @@ WORKDIR /root/Alpha_Bot/
 
 COPY package.json .
 COPY cleanup-sessions.js .
-COPY .env .
 
 RUN node cleanup-sessions.js
 
